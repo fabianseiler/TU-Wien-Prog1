@@ -167,7 +167,8 @@ void analyze_text(char text[]) {
         }
     }
         printf("Wortanzahl: %d\t\t\n", wrd_count);
-         for (int i = 1; i <= 10; i++) {
+         for (int i = 1; i <= 9; i++) {
              printf("Laenge: %d\t | \tHaefigkeit: %d\n", i, stats[i-1]);
          }
+         printf("Laenge: 10\t | \tHaefigkeit: %d\n", stats[9]);
 }
