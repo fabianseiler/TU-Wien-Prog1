@@ -10,7 +10,7 @@ void analyze_text(char text[]);
 
 #define N 100
 
-//test
+
 int main() {
 
     while (1) {
@@ -18,7 +18,6 @@ int main() {
 
         char input[N];
         long len;
-        long num_or_al;
         char prog_end;
 
         printf("Texteingabe:");
