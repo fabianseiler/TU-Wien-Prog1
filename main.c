@@ -10,6 +10,7 @@ void analyze_text(char text[]);
 
 #define N 100
 
+//test
 int main() {
 
     while (1) {
