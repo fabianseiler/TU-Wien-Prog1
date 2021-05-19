@@ -48,8 +48,7 @@ int main() {
 void my_getline(char input[], long len){
 
     fgets(input, len, stdin);
-    fflush(stdin);
-    input[len]= '\0';
+
     /*
    char c;
    for(int i=0; i<len-1; i++){
@@ -61,7 +60,9 @@ void my_getline(char input[], long len){
            break;
        }
    }
-    */
+     */
+    fflush(stdin);
+    input[len]= '\0';
 }
 
 long get_letters(char text[]){
