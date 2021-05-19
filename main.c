@@ -13,9 +13,9 @@ char* get_others_ptr(char text[]);
 #define N 100
 
 
-int main() {
+int main(){
 
-    while (1) {
+    while (1){
 
         char input[N];
         long len;
@@ -29,10 +29,9 @@ int main() {
             len = get_others(input);
             printf("Andere Zeichen am Anfang: %ld\n", len);
         }
-        else {
+        else{
             len = get_letters(input);
             printf("Buchstaben am Anfang: %ld\n", len);
-            printf("%p", get_letters_ptr(input));
         }
         analyze_text(input);
 
@@ -186,7 +185,6 @@ char* get_letters_ptr(char text[]){
         return NULL;
     }
 }
-
 
 char* get_others_ptr(char text[]){
 
