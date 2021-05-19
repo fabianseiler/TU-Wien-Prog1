@@ -7,6 +7,8 @@ long get_letters(char text[]);
 long get_others(char text[]);
 char char_check();
 void analyze_text(char text[]);
+char* get_letters_ptr(char text[]);
+char* get_others_ptr(char text[]);
 
 #define N 100
 
@@ -14,7 +16,6 @@ void analyze_text(char text[]);
 int main() {
 
     while (1) {
-
 
         char input[N];
         long len;
@@ -27,11 +28,12 @@ int main() {
         if (get_letters(input) == 0) {
             len = get_others(input);
             printf("Andere Zeichen am Anfang: %ld\n", len);
-        } else {
+        }
+        else {
             len = get_letters(input);
             printf("Buchstaben am Anfang: %ld\n", len);
+            printf("%p", get_letters_ptr(input));
         }
-
         analyze_text(input);
 
         printf("--------------------------\n");
@@ -172,3 +174,29 @@ void analyze_text(char text[]) {
          }
          printf("Laenge: 10\t | \tHaefigkeit: %d\n", stats[9]);
 }
+
+char* get_letters_ptr(char text[]){
+
+    long len = get_letters(text);
+    if (get_letters(text) < strlen(text)){
+        char *p = &text[len];
+        return p;
+    }
+    else {
+        return NULL;
+    }
+}
+
+
+char* get_others_ptr(char text[]){
+
+    long len = get_others(text);
+    if (get_others(text) < strlen(text)){
+        char *p = &text[len];
+        return p;
+    }
+    else{
+        return NULL;
+    }
+}
+
