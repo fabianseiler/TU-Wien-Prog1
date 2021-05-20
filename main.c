@@ -9,6 +9,7 @@ char char_check();
 void analyze_text(char text[]);
 char* get_letters_ptr(char text[]);
 char* get_others_ptr(char text[]);
+void analyze_text_ptr(char text[]);
 
 #define N 100
 
@@ -167,7 +168,7 @@ void analyze_text(char text[]) {
             wrd_flag = 1;
         }
     }
-        printf("Wortanzahl: %d\t\t\n", wrd_count);
+         printf("Wortanzahl: %d\t\t\n", wrd_count);
          for (int i = 1; i <= 9; i++) {
              printf("Laenge: %d\t | \tHaefigkeit: %d\n", i, stats[i-1]);
          }
@@ -196,5 +197,11 @@ char* get_others_ptr(char text[]){
     else{
         return NULL;
     }
+}
+
+void analyze_text_ptr(char text[]){
+
+
+
 }
 
