@@ -10,6 +10,7 @@ void analyze_text(char text[]);
 char* get_letters_ptr(char text[]);
 char* get_others_ptr(char text[]);
 void analyze_text_ptr(char text[]);
+void trim_text(char text[]);
 
 #define N 100
 
@@ -19,26 +20,24 @@ int main(){
     while (1){
 
         char input[N];
-        long len;
         char prog_end;
 
         printf("Texteingabe:");
         my_getline(input, N);
-        printf("Input: %s\n", input);
 
         if (get_letters(input) == 0) {
-            len = get_others(input);
-            printf("Andere Zeichen am Anfang: %ld\n", len);
+            printf("Andere Zeichen am Anfang: %ld\n", get_others(input));
         }
         else{
-            len = get_letters(input);
-            printf("Buchstaben am Anfang: %ld\n", len);
+            printf("Buchstaben am Anfang: %ld\n", get_letters(input));
         }
         analyze_text(input);
+        //analyze_text_ptr(input);
+        //trim_text(input);
 
         printf("--------------------------\n");
-        prog_end = char_check();                    // check if programm should end
-        if (prog_end == 'n') {
+        char end_char = char_check();
+        if (end_char == 'n'){                  // check if programm should end
             printf("\n------PROGRAMM-ENDE-------");
             break;
         }
@@ -72,7 +71,7 @@ long get_letters(char text[]){
     }
     else{
         len++;
-        for (int i=1; i <=strlen(text); i++ ){
+        for (int i=1; i < strlen(text); i++ ){
             if (isalpha(text[i]) != 0){
                 len++;
             }
@@ -87,12 +86,12 @@ long get_letters(char text[]){
 long get_others(char text[]){
 
     int len = 0;
-    if (isalpha(text[0]) != 0 && isspace(text[0]) == 0){
+    if (isalpha(text[0]) && !isspace(text[0])){
         return 0;
     }
     else{
         len++;
-        for (int i=1; i <=strlen(text); i++ ){
+        for (int i=1; i < strlen(text); i++ ){
             if (isalpha(text[i]) == 0){
                 len++;
             }
@@ -123,56 +122,35 @@ char char_check(){
 
 void analyze_text(char text[]) {
 
-    int wrd_flag;
-    int len;
+    int len = 0;
     int wrd_count = 0;
     char stats[10] = {0};
     char cpy_text[N] = {0};
+    strcpy(cpy_text, text);
 
-    if (get_letters(text) > 0) {             //check ob am anfang ein wort ist
-        len = get_letters(text);
-        wrd_flag = 1;
-        if (get_letters(text) >= 10){       //zählt ein feld im stats array +1
-            stats[9]++;
-        }
-        else{
-            stats[get_letters(text)-1]++;
-        }
-    }
-    else {
-        len = get_others(text);
-        wrd_flag = 0;
-    }
-
-    while (len <= strlen(text)) {       //loop unti len reaches the max value
-        for (int i = 0;
-             i <= strlen(text); i++) {  //copiert text von [len] bis [max(text)] in cpy_text(pos [0] bis [N-len])
-            cpy_text[i] = text[i + len];
-        }
-        for (int i = strlen(text) + 1; i < N; i++) {     //füllt cpy_text von [len] bis [N] mit 0
-            cpy_text[i] = 0;
-        }
-        if (wrd_flag == 1) {                 //check ob der letzte bereich ein wort war
-            len += get_others(cpy_text);
-            wrd_flag = 0;
+    while (len < strlen(text)) {                //loop unti len reaches the max value
+        printf("\nlen: %d", len);
+        if (get_letters(cpy_text) > 0){
             wrd_count++;
+            len += get_letters(cpy_text) + 1;
+            get_letters(cpy_text) >= 10 ? stats[9]++ : stats[get_letters(cpy_text)-1]++;
         }
         else {
-            if (get_letters(cpy_text) >= 10) {
-                stats[9]++;
-            }
-            else {
-                stats[get_letters(cpy_text)-1]++;
-            }
-            len += get_letters(cpy_text);
-            wrd_flag = 1;
+            len += get_others(cpy_text) + 1;
+        }
+
+        for (int i = 0;i <= strlen(cpy_text); i++) {  //for loops like a selective strncpy
+            cpy_text[i] = text[i + len-1];
+        }
+        for (int i = strlen(text) + 1; i <= N; i++) {     //filling the rest of cpy_text with 0
+            cpy_text[i] = 0;
         }
     }
-         printf("Wortanzahl: %d\t\t\n", wrd_count);
-         for (int i = 1; i <= 9; i++) {
-             printf("Laenge: %d\t | \tHaefigkeit: %d\n", i, stats[i-1]);
-         }
-         printf("Laenge: 10\t | \tHaefigkeit: %d\n", stats[9]);
+    printf("Wortanzahl: %d\t\t\n", wrd_count);
+    for (int i = 1; i <= 9; i++) {
+        printf("Laenge: %d\t | \tHaefigkeit: %d\n", i, stats[i - 1]);
+    }
+    printf("Laenge: 10\t | \tHaefigkeit: %d\n", stats[9]);
 }
 
 char* get_letters_ptr(char text[]){
@@ -199,9 +177,42 @@ char* get_others_ptr(char text[]){
     }
 }
 
-void analyze_text_ptr(char text[]){
+void analyze_text_ptr(char text[]) {
 
+    int size;
+    int len = 0;
+    int wrd_count = 0;
+    char stats[10] = {0};
+    char cpy_text[N] = {0};
+    memcpy(cpy_text, text, strlen(text));
+
+    while (get_others_ptr(cpy_text) != NULL) {                //loop unti len reaches the max value
+        if (get_letters_ptr(cpy_text) != cpy_text){
+            wrd_count++;
+            size = get_letters(cpy_text);
+            printf("\nsize: %d", size);
+            len += size;
+            size >= 10 ? stats[9]++ : stats[size-1]++;
+        }
+        else {
+            len += get_others(cpy_text);
+        }
+        printf("\nlen: %d", len);
+        for (int i = 0;i <= strlen(cpy_text); i++) {        //for loops like a selective strncpy
+            cpy_text[i] = text[i + len];
+        }
+        for (int i = strlen(text) + 1; i < N; i++) {        //filling the rest of cpy_text with 0
+            cpy_text[i] = 0;
+        }
+    }
+    printf("Wortanzahl: %d\t\t\n", wrd_count);
+    for (int i = 1; i <= 9; i++) {
+        printf("Laenge: %d\t | \tHaefigkeit: %d\n", i, stats[i - 1]);
+    }
+    printf("Laenge: 10\t | \tHaefigkeit: %d\n", stats[9]);
+}
+
+void trim_text(char text[]){
 
 
 }
-
