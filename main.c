@@ -35,9 +35,8 @@ int main(){
         analyze_text_ptr(input);
         //trim_text(input);
 
-        printf("--------------------------\n");
-        char end_char = char_check();
-        if (end_char == 'n'){                  // check if programm should end
+        prog_end = char_check();
+        if (prog_end == 'n'){                  // check if programm should end
             printf("\n------PROGRAMM-ENDE-------");
             break;
         }
@@ -124,33 +123,35 @@ void analyze_text(char text[]) {
 
     int len = 0;
     int wrd_count = 0;
-    char stats[10] = {0};
+    int stats[10] = {0};
     char cpy_text[N] = {0};
     memcpy(cpy_text, text, strlen(text));
 
-    //TODO der scheiß funktioniert nicht
-    while (len < strlen(text)) {                //loop unti len reaches the max value
+    while (len <= strlen(text)) {                //loop unti len reaches the max value
         if (get_letters(cpy_text) > 0){
             wrd_count++;
             len += get_letters(cpy_text) + 1;
             get_letters(cpy_text) >= 10 ? stats[9]++ : stats[get_letters(cpy_text)-1]++;
         }
         else {
-            len += get_others(cpy_text) + 1;
+            len += get_others(cpy_text) ;
         }
 
         for (int i = 0;i <= strlen(cpy_text); i++) {  //for loops like a selective strncpy
-            cpy_text[i] = text[i + len-1];
+            cpy_text[i] = text[i + len];
         }
-        for (int i = strlen(text) + 1; i <= N; i++) {     //filling the rest of cpy_text with 0
+        for (int i = strlen(text) + 1; i < N; i++) {     //filling the rest of cpy_text with 0
             cpy_text[i] = 0;
         }
     }
     printf("Wortanzahl: %d\t\t\n", wrd_count);
+    printf("Statistik:\n");
+    printf("--------------------------------------\n");
     for (int i = 1; i <= 9; i++) {
         printf("Laenge: %d\t | \tHaeufigkeit: %d\n", i, stats[i - 1]);
     }
-    printf("Laenge: 10\t | \tHaeufigkeit: %d\n", stats[9]);
+    printf("Laenge: >=10\t | \tHaeufigkeit: %d\n", stats[9]);
+    printf("--------------------------------------\n");
 }
 
 char* get_letters_ptr(char text[]){
@@ -182,7 +183,7 @@ void analyze_text_ptr(char text[]) {
     int size;
     int len = 0;
     int wrd_count = 0;
-    char stats[10] = {0};
+    int stats[10] = {0};
     char cpy_text[N] = {0};
     memcpy(cpy_text, text, strlen(text));
 
@@ -190,14 +191,12 @@ void analyze_text_ptr(char text[]) {
         if (get_letters_ptr(cpy_text) != cpy_text){
             wrd_count++;
             size = get_letters(cpy_text);       //TODO Size mit get_letters_ptr lösen
-            printf("\nsize: %d", size);
             len += size;
             size >= 10 ? stats[9]++ : stats[size-1]++;
         }
         else {
             len += get_others(cpy_text);
         }
-        printf("\nlen: %d", len);
         for (int i = 0;i <= strlen(cpy_text); i++) {        //for loops like a selective strncpy
             cpy_text[i] = text[i + len];
         }
@@ -206,10 +205,13 @@ void analyze_text_ptr(char text[]) {
         }
     }
     printf("Wortanzahl: %d\t\t\n", wrd_count);
+    printf("Statistik:\n");
+    printf("--------------------------------------\n");
     for (int i = 1; i <= 9; i++) {
-        printf("Laenge: %d\t | \tHaefigkeit: %d\n", i, stats[i - 1]);
+        printf("Laenge: %d\t | \tHaeufigkeit: %d\n", i, stats[i - 1]);
     }
-    printf("Laenge: 10\t | \tHaefigkeit: %d\n", stats[9]);
+    printf("Laenge: >=10\t | \tHaeufigkeit: %d\n", stats[9]);
+    printf("--------------------------------------\n");
 }
 
 void trim_text(char text[]){
