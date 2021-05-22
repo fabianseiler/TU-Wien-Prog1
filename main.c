@@ -31,7 +31,7 @@ int main(){
         else{
             printf("Buchstaben am Anfang: %ld\n", get_letters(input));
         }
-        analyze_text(input);
+        //analyze_text(input);
         analyze_text_ptr(input);
         //trim_text(input);
 
@@ -125,7 +125,7 @@ void analyze_text(char text[]) {
     int wrd_count = 0;
     int stats[10] = {0};
     char cpy_text[N] = {0};
-    memcpy(cpy_text, text, strlen(text));
+    strcpy(cpy_text, text);
 
     while (len <= strlen(text)) {                //loop unti len reaches the max value
         if (get_letters(cpy_text) > 0){
@@ -134,10 +134,10 @@ void analyze_text(char text[]) {
             get_letters(cpy_text) >= 10 ? stats[9]++ : stats[get_letters(cpy_text)-1]++;
         }
         else {
-            len += get_others(cpy_text) ;
+            len += get_others(cpy_text);
         }
 
-        for (int i = 0;i <= strlen(cpy_text); i++) {  //for loops like a selective strncpy
+        for (int i = 0;i <= strlen(text); i++) {  //for loops like a selective strncpy
             cpy_text[i] = text[i + len];
         }
         for (int i = strlen(text) + 1; i < N; i++) {     //filling the rest of cpy_text with 0
@@ -185,24 +185,38 @@ void analyze_text_ptr(char text[]) {
     int wrd_count = 0;
     int stats[10] = {0};
     char cpy_text[N] = {0};
-    memcpy(cpy_text, text, strlen(text));
+    cpy_text[N-1] = '\0';
+    strcpy(cpy_text, text);
+
 
     while (get_others_ptr(cpy_text) != NULL) {                //loop unti len reaches the max value
         if (get_letters_ptr(cpy_text) != cpy_text){
             wrd_count++;
-            size = get_letters(cpy_text);       //TODO Size mit get_letters_ptr lösen
+            if (get_letters_ptr(cpy_text) == NULL){
+                size = (long)strlen(cpy_text);
+            }
+            else{
+                size = (long)get_letters_ptr(cpy_text)-(long)cpy_text;
+            }
             len += size;
             size >= 10 ? stats[9]++ : stats[size-1]++;
         }
         else {
-            len += get_others(cpy_text);
+            if (get_others_ptr(cpy_text) == NULL){
+                size = (long)strlen(cpy_text);
+            }
+            else{
+                size = (long)get_others_ptr(cpy_text)-(long)cpy_text;
+            }
+            len += size;
         }
         for (int i = 0;i <= strlen(cpy_text); i++) {        //for loops like a selective strncpy
             cpy_text[i] = text[i + len];
         }
-        for (int i = strlen(text) + 1; i < N; i++) {        //filling the rest of cpy_text with 0
+        for (int i = strlen(text) + 1; i < N-1; i++) {        //filling the rest of cpy_text with 0
             cpy_text[i] = 0;
         }
+        cpy_text[N-1] = '\0';
     }
     printf("Wortanzahl: %d\t\t\n", wrd_count);
     printf("Statistik:\n");
@@ -213,6 +227,7 @@ void analyze_text_ptr(char text[]) {
     printf("Laenge: >=10\t | \tHaeufigkeit: %d\n", stats[9]);
     printf("--------------------------------------\n");
 }
+
 
 void trim_text(char text[]){
 
