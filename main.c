@@ -30,8 +30,8 @@ int main(){
         else{
             printf("Buchstaben am Anfang: %ld\n", get_letters(input));
         }
-        analyze_text(input);
-        analyze_text_ptr(input);
+        //analyze_text(input);
+        //analyze_text_ptr(input);
         trim_text(input);
 
         prog_end = char_check();
@@ -101,11 +101,11 @@ long get_others(char text[]){
 
 char char_check(){
     // gets char as input, checks if it's valid and returns the char
-
+    //TODO mögliche bugs bei Nochmal 'y'
     int end_char;
     printf("Nochmal 'y' oder 'n':");
     end_char = getchar();
-    if (end_char == 'n'){
+    if (end_char == 'n' || end_char == 'y'){
         return end_char;
     }
     do{
@@ -200,12 +200,7 @@ void analyze_text_ptr(char text[]) {
             size >= 10 ? stats[9]++ : stats[size-1]++;
         }
         else {
-            if (get_others_ptr(cpy_text) == NULL){              // branch if the string ends after non word
-                size = (long)strlen(cpy_text);
-            }
-            else{
-                size = (long)get_others_ptr(cpy_text)-(long)cpy_text;
-            }
+            size = (long)get_others_ptr(cpy_text)-(long)cpy_text;
             len += size;                                        // adjust new index
         }
         for (int i = 0;i <= strlen(cpy_text); i++) {            // copy the remaining chars from text to cpy_text
@@ -226,18 +221,32 @@ void analyze_text_ptr(char text[]) {
     printf("--------------------------------------\n");
 }
 
-void trim_text(char text[]){
+void trim_text(char text[]){        //TODO der shit geht ned
     // removes non word substrings and replaces them with ' '
     int size;
     int len = 0;
-    char cpy_text[N] = {0};
-    cpy_text[N-1] = '\0';
-    memcpy(cpy_text, text, strlen(text));
+    char cpy_text[N] = {' '};
+    char *pStart = text;
 
-    while (get_others_ptr(cpy_text) != NULL){
-        if(get_letters_ptr(cpy_text) != cpy_text){
+    while (get_others_ptr(pStart) != NULL){
+        if(get_letters_ptr(pStart) != pStart){
+            if (get_letters_ptr(pStart) == NULL){
+                size = (long)strlen(pStart);
+            }
+            else{
+                size = (long)get_letters_ptr(pStart)-(long)pStart;
+            }
 
+
+            memmove(cpy_text + len, pStart, size);
+            len += size;
+            pStart = get_letters_ptr(pStart);
+            cpy_text[len+1] = ' ';
+        }
+        else{
+            pStart = get_others_ptr(pStart);
         }
     }
-
+    cpy_text[strlen(cpy_text)] = '\0';
+    printf("Nur Worte: %s\n", cpy_text);
 }
