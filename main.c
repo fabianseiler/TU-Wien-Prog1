@@ -31,16 +31,16 @@ int main(){
         else{
             printf("Buchstaben am Anfang: %ld\n", get_letters(input));
         }
-        //analyze_text(input);
+        analyze_text(input);
         analyze_text_ptr(input);
-        //trim_text(input);
+        trim_text(input);
 
         prog_end = char_check();
         if (prog_end == 'n'){                  // check if programm should end
             printf("\n------PROGRAMM-ENDE-------");
             break;
         }
-        fflush(stdin);
+
     }
     return 0;
 }
@@ -105,18 +105,19 @@ long get_others(char text[]){
 char char_check(){
     // gets char as input, checks if it's valid and returns the char
 
-    char end_char;
-    printf("Nochmal (y|n)? ");
-    fflush(stdin);
+    int end_char;
+    printf("Nochmal 'y' oder 'n':");
     end_char = getchar();
-
-    while (end_char != 'y' && end_char != 'n'){
-        printf("Bitte geben Sie 'y' oder 'n' ein!\n");
-        printf("Nochmal (y|n)? ");
-        fflush(stdin);
-        end_char = getchar();
+    if (end_char == 'n'){
+        return end_char;
     }
+    do{
+        while ((end_char = getchar()) != '\n' && end_char != EOF);
+        printf("Bitte 'y' oder 'n' eingeben:");
+        end_char = getchar();
+    }while (end_char != 'y' && end_char != 'n' || getchar() != '\n');
     return end_char;
+
 }
 
 void analyze_text(char text[]) {
@@ -125,6 +126,7 @@ void analyze_text(char text[]) {
     int wrd_count = 0;
     int stats[10] = {0};
     char cpy_text[N] = {0};
+    cpy_text[N-1] = '\0';
     strcpy(cpy_text, text);
 
     while (len <= strlen(text)) {                //loop unti len reaches the max value
@@ -140,9 +142,10 @@ void analyze_text(char text[]) {
         for (int i = 0;i <= strlen(text); i++) {  //for loops like a selective strncpy
             cpy_text[i] = text[i + len];
         }
-        for (int i = strlen(text) + 1; i < N; i++) {     //filling the rest of cpy_text with 0
+        for (int i = strlen(text) + 1; i < N-1; i++) {     //filling the rest of cpy_text with 0
             cpy_text[i] = 0;
         }
+        cpy_text[N-1] = '\0';
     }
     printf("Wortanzahl: %d\t\t\n", wrd_count);
     printf("Statistik:\n");
@@ -188,7 +191,6 @@ void analyze_text_ptr(char text[]) {
     cpy_text[N-1] = '\0';
     strcpy(cpy_text, text);
 
-
     while (get_others_ptr(cpy_text) != NULL) {                //loop unti len reaches the max value
         if (get_letters_ptr(cpy_text) != cpy_text){
             wrd_count++;
@@ -227,7 +229,6 @@ void analyze_text_ptr(char text[]) {
     printf("Laenge: >=10\t | \tHaeufigkeit: %d\n", stats[9]);
     printf("--------------------------------------\n");
 }
-
 
 void trim_text(char text[]){
 
