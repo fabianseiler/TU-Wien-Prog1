@@ -30,9 +30,9 @@ int main(){
         else{
             printf("Buchstaben am Anfang: %ld\n", get_letters(input));
         }
-        analyze_text(input);
+        //analyze_text(input);
         //analyze_text_ptr(input);
-        //trim_text(input);
+        trim_text(input);
 
         prog_end = char_check();
         if (prog_end == 'n'){                                               // check if programm should end
@@ -103,7 +103,7 @@ char char_check(){
     // gets char as input, checks if it's valid and returns the char
     int end_char;
     int c;
-    printf("Bitte 'y' oder 'n' eingeben:");
+    printf("Nochmal ?:");
     end_char = getchar();
     while (end_char != 'y' && end_char != 'n' || getchar() != '\n') {
         while ((c = getchar()) != '\n' && c != EOF);
@@ -220,27 +220,36 @@ void analyze_text_ptr(char text[]) {
 
 void trim_text(char text[]){        //TODO der shit geht ned
     // removes non word substrings and replaces them with ' '
-    int size;
+    int size = 0;
     int len = 0;
-    char cpy_text[N] = {' '};
+    char only_words[N] = " ";
     char *pStart = text;
+    char *oldStart = text;
 
-    while (get_others_ptr(pStart) != NULL && get_letters_ptr(pStart) != NULL){
-        if(get_letters_ptr(pStart) != pStart){
-            if (get_letters_ptr(pStart) == NULL){
-                size = (long)strlen(pStart);
+    do {
+        printf("%p: %s\n", pStart, pStart);
+        oldStart = pStart;
+        if (get_letters_ptr(pStart) != pStart) {
+            if (get_letters_ptr(pStart) == NULL) {
+                size = (long) strlen(pStart);
             }
-            else{
-                size = (long)get_letters_ptr(pStart)-(long)pStart;
+            else {
+                size = (long)get_letters_ptr(pStart) - (long)pStart;
             }
-            memmove(cpy_text + len, pStart, size);
-            len += size;
+            memmove(&only_words[len], pStart, size + 1);
+            printf("memmove: %s, size: %d, pStart: %p, point: %p\n", only_words, size, pStart, &only_words[len]);
+            len += size + 1;
             pStart = get_letters_ptr(pStart);
+            only_words[len] = ' ';
+            printf("only_words[len]:%c\n", only_words[len]);
         }
-        else{
+        else {
             pStart = get_others_ptr(pStart);
         }
-    }
-    cpy_text[strlen(cpy_text)] = '\0';
-    printf("Nur Worte: %s\n", cpy_text);
+    } while (get_letters_ptr(oldStart)!= NULL && get_others_ptr(oldStart) != NULL);
+
+    only_words[len+1] = '\0';
+    printf("Nur Woerter: %s\n", only_words);
 }
+
+
