@@ -239,7 +239,7 @@ void trim_text(char text[]){
             printf("memmove: %s, size: %d, pStart: %p, point: %p\n", only_words, size, pStart, &only_words[len]);
             len += size + 1;
             pStart = get_letters_ptr(pStart);
-            only_words[len] = ' ';                  //TODO der shit geht ned
+            only_words[len-1] = ' ';
         }
         else {
             pStart = get_others_ptr(pStart);
