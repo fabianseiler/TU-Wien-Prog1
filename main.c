@@ -30,9 +30,9 @@ int main(){
         else{
             printf("Buchstaben am Anfang: %ld\n", get_letters(input));
         }
-        //analyze_text(input);
+        analyze_text(input);
         //analyze_text_ptr(input);
-        trim_text(input);
+        //trim_text(input);
 
         prog_end = char_check();
         if (prog_end == 'n'){                                               // check if programm should end
@@ -101,18 +101,15 @@ long get_others(char text[]){
 
 char char_check(){
     // gets char as input, checks if it's valid and returns the char
-    //TODO mögliche bugs bei Nochmal 'y'
     int end_char;
-    printf("Nochmal 'y' oder 'n':");
+    int c;
+    printf("Bitte 'y' oder 'n' eingeben:");
     end_char = getchar();
-    if (end_char == 'n' || end_char == 'y'){
-        return end_char;
-    }
-    do{
-        while ((end_char = getchar()) != '\n' && end_char != EOF);
+    while (end_char != 'y' && end_char != 'n' || getchar() != '\n') {
+        while ((c = getchar()) != '\n' && c != EOF);
         printf("Bitte 'y' oder 'n' eingeben:");
         end_char = getchar();
-    }while (end_char != 'y' && end_char != 'n' || getchar() != '\n');
+    }
     return end_char;
 }
 
@@ -228,7 +225,7 @@ void trim_text(char text[]){        //TODO der shit geht ned
     char cpy_text[N] = {' '};
     char *pStart = text;
 
-    while (get_others_ptr(pStart) != NULL){
+    while (get_others_ptr(pStart) != NULL && get_letters_ptr(pStart) != NULL){
         if(get_letters_ptr(pStart) != pStart){
             if (get_letters_ptr(pStart) == NULL){
                 size = (long)strlen(pStart);
@@ -236,12 +233,9 @@ void trim_text(char text[]){        //TODO der shit geht ned
             else{
                 size = (long)get_letters_ptr(pStart)-(long)pStart;
             }
-
-
             memmove(cpy_text + len, pStart, size);
             len += size;
             pStart = get_letters_ptr(pStart);
-            cpy_text[len+1] = ' ';
         }
         else{
             pStart = get_others_ptr(pStart);
