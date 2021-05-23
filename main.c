@@ -218,7 +218,7 @@ void analyze_text_ptr(char text[]) {
     printf("--------------------------------------\n");
 }
 
-void trim_text(char text[]){        //TODO der shit geht ned
+void trim_text(char text[]){
     // removes non word substrings and replaces them with ' '
     int size = 0;
     int len = 0;
@@ -227,7 +227,6 @@ void trim_text(char text[]){        //TODO der shit geht ned
     char *oldStart = text;
 
     do {
-        printf("%p: %s\n", pStart, pStart);
         oldStart = pStart;
         if (get_letters_ptr(pStart) != pStart) {
             if (get_letters_ptr(pStart) == NULL) {
@@ -240,15 +239,14 @@ void trim_text(char text[]){        //TODO der shit geht ned
             printf("memmove: %s, size: %d, pStart: %p, point: %p\n", only_words, size, pStart, &only_words[len]);
             len += size + 1;
             pStart = get_letters_ptr(pStart);
-            only_words[len] = ' ';
-            printf("only_words[len]:%c\n", only_words[len]);
+            only_words[len] = ' ';                  //TODO der shit geht ned
         }
         else {
             pStart = get_others_ptr(pStart);
         }
     } while (get_letters_ptr(oldStart)!= NULL && get_others_ptr(oldStart) != NULL);
 
-    only_words[len+1] = '\0';
+    only_words[len] = '\0';
     printf("Nur Woerter: %s\n", only_words);
 }
 
