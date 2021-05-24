@@ -101,17 +101,24 @@ long get_others(char text[]){
 
 char char_check(){
     // gets char as input, checks if it's valid and returns the char
-    int end_char;
-    int c;
-    printf("Nochmal ?:");
-    end_char = getchar();
-    while (end_char != 'y' && end_char != 'n' || getchar() != '\n') {
-        while ((c = getchar()) != '\n' && c != EOF);
-        printf("Bitte 'y' oder 'n' eingeben:");
-        end_char = getchar();
-    }
+
+    char end_char;
+    char control_char;
+    do{
+        printf("Nochmal ? ('y' oder 'n'):");
+        scanf("%c", &end_char);
+        if (getchar() != '\n'){
+            while ((control_char = getchar()) != '\n' && control_char != EOF){} // clears stdin
+        }
+        else{
+            if ( end_char == 'y' || end_char == 'n'){   // break case
+                break;
+            }
+        }
+    } while (1);
     return end_char;
 }
+
 
 void analyze_text(char text[]) {
 // prints out the number of words and the length of each word.
@@ -249,4 +256,3 @@ void trim_text(char text[]){
     printf("Nur Woerter: %s\n", only_words);
 }
 
-//TODO bugtesting
