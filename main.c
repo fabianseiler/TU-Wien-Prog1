@@ -30,8 +30,8 @@ int main(){
         else{
             printf("Buchstaben am Anfang: %ld\n", get_letters(input));
         }
-        //analyze_text(input);
-        //analyze_text_ptr(input);
+        analyze_text(input);
+        analyze_text_ptr(input);
         trim_text(input);
 
         prog_end = char_check();
@@ -147,7 +147,7 @@ void analyze_text(char text[]) {
         printf("Laenge: %d\t | \tHaeufigkeit: %d\n", i, stats[i - 1]);
     }
     printf("Laenge: >=10\t | \tHaeufigkeit: %d\n", stats[9]);
-    printf("--------------------------------------\n");
+    printf("--------------------------------------\n\n");
 }
 
 char* get_letters_ptr(char text[]){
@@ -215,39 +215,38 @@ void analyze_text_ptr(char text[]) {
         printf("Laenge: %d\t | \tHaeufigkeit: %d\n", i, stats[i - 1]);
     }
     printf("Laenge: >=10\t | \tHaeufigkeit: %d\n", stats[9]);
-    printf("--------------------------------------\n");
+    printf("--------------------------------------\n\n");
 }
 
 void trim_text(char text[]){
     // removes non word substrings and replaces them with ' '
     int size = 0;
     int len = 0;
-    char only_words[N] = " ";
+    char only_words[N] = {' '};
     char *pStart = text;
     char *oldStart = text;
 
     do {
         oldStart = pStart;
-        if (get_letters_ptr(pStart) != pStart) {
-            if (get_letters_ptr(pStart) == NULL) {
+        if (get_letters_ptr(pStart) != pStart) {                // check if a word is next
+            if (get_letters_ptr(pStart) == NULL) {              // get size of the word
                 size = (long) strlen(pStart);
             }
             else {
                 size = (long)get_letters_ptr(pStart) - (long)pStart;
             }
-            memmove(&only_words[len], pStart, size + 1);
-            printf("memmove: %s, size: %d, pStart: %p, point: %p\n", only_words, size, pStart, &only_words[len]);
+            memmove(&only_words[len], pStart, size + 1);        // move word plus next char to only_words
             len += size + 1;
-            pStart = get_letters_ptr(pStart);
-            only_words[len-1] = ' ';
+            pStart = get_letters_ptr(pStart);                   // sets start ptr to after the word
+            only_words[len-1] = ' ';                            // sets the char after the word to ' '
         }
         else {
-            pStart = get_others_ptr(pStart);
+            pStart = get_others_ptr(pStart);                    // sets start ptr to after the non word substring
         }
-    } while (get_letters_ptr(oldStart)!= NULL && get_others_ptr(oldStart) != NULL);
+    } while (get_letters_ptr(oldStart)!= NULL && get_others_ptr(oldStart) != NULL); // end of str is reached
 
-    only_words[len] = '\0';
+    only_words[len] = '\0';                                     // sets '\0' after all the words
     printf("Nur Woerter: %s\n", only_words);
 }
 
-
+//TODO bugtesting
