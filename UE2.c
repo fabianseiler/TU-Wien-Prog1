@@ -8,15 +8,19 @@ typedef struct Element_s {
     struct Element_s *next, *prev;
 } Element_t;
 
-void read_from_keyboard(Element_t *item);
-void readString(char *name, char *text, long len);  // Extra Func
+
 long readValue(void);                               // Extra Func
+void read_from_keyboard(Element_t *item);
 Element_t *allocate_element();
+Element_t *insert_last(Element_t *list);
+void free_list(Element_t **list);
+
 
 
 int main()
 {
     long c;
+    Element_t *Playlist;
     while(1){
         printf("0: Programm beenden\n");
         printf("1: Neuen Eintrag einlesen und am Ende einfuegen\n");
@@ -40,42 +44,12 @@ int main()
             printf("Programm beendet!\n");
             return 0;
         case 1:
-
+            insert_last(Playlist);
+            break;
         default:
             printf("Error bei Eingabe!\n");
             break;
         }
-    }
-}
-
-void read_from_keyboard(Element_t *item){
-
-    if(item != NULL){
-        if(item->interpreter != NULL && item->songtitle != NULL){
-        readString("Interpreter", item->interpreter, 256);
-        readString("Song Title", item->songtitle, 256);
-        }
-    }
-}
-
-void readString(char *name, char *text, long len){
-    // reads in a string with a max length of len and clears stdin
-    printf("%s:", name);
-
-    char c, control_char;
-    for (long i = 0; i < len - 1; i++){     // reads in a char until '\n' was entered or len was reached
-        c = getchar();
-        if (c != '\n') {
-            text[i] = c;
-        }
-        else {
-            text[i] = '\0';
-            break;
-        }
-    }
-    if (strlen(text) >= len-1) {            // clears stdin if more char than len where entered
-        text[len-1] = '\0';
-        while ((control_char = getchar()) != '\n' && control_char != EOF){}
     }
 }
 
@@ -95,11 +69,51 @@ long readValue(void){
     return value;
 }
 
-Element_t *allocate_element(){
 
-    Element_t *entry = malloc(sizeof(Element_t));
-    entry->interpreter = malloc(256*sizeof(char));
-    entry->songtitle = malloc(256*sizeof(char));
+void read_from_keyboard(Element_t *item){
+
+    if(item != NULL){
+        if(item->interpreter != NULL && item->songtitle != NULL){
+            printf("Iterpreter:");
+            fgets(item->interpreter, 256, stdin);
+            printf("Songtitle:");
+            fgets(item->songtitle, 256, stdin);
+
+
+
+        }
+        else printf("Error bei Eingabe!\n");
+    }
+    else printf("Error bei Eingabe!\n");
 }
 
 
+Element_t *allocate_element(){
+
+    Element_t *entry = malloc(sizeof(Element_t));
+    if(entry == NULL){
+        printf("Error bei allozierung!\n");
+    }
+    read_from_keyboard(entry);
+    entry->next = NULL;
+    entry->prev = NULL;
+}
+
+Element_t *insert_last(Element_t *list){
+
+    if(list == NULL){
+        allocate_element(list);
+    }
+    else{
+        Element_t *next_ele;
+        allocate_element(next_ele);
+        list->next = next_ele;
+    }
+    return list;
+}
+
+void free_list(Element_t **list){
+
+
+
+}
